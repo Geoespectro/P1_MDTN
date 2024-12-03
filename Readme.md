@@ -1,6 +1,3 @@
-Aquí tienes el `README.md` actualizado y completo, asegurándome de incluir toda la información correctamente organizada, sin los archivos generados por ejecución:
-
-```markdown
 # 🌐 MDTN v0.1 - Proyecto de Descarga y Procesamiento de Datos Satelitales GOES-16
 
 **MDTN v0.1** es un sistema diseñado para automatizar la descarga y el procesamiento de datos satelitales **GOES-16**, facilitando la generación de mapas de topes nubosos. Ideal para usuarios y desarrolladores enfocados en análisis climático, teledetección y meteorología.
@@ -46,7 +43,7 @@ El proyecto consta de dos módulos principales:
 │   │           └── natural_earth/physical
 │   ├── inbox                   # Directorio de entrada para las imágenes descargadas
 │   ├── main.py                 # Script principal para el procesamiento
-│   ├── src                     # Código auxiliar para el procesamiento
+│   ├── src                     # Carpeta auxiliar
 │   │   └── helpers.py          # Funciones auxiliares del módulo de procesamiento
 │   └── workdir                 # Resultados del procesamiento
 ├── test
@@ -140,5 +137,5 @@ Para dudas o sugerencias:
 - **Juan Carlos Quinteros**, **Pedro Rivolta**
 
 ¡Gracias por utilizar **MDTN v0.1**! Créditos a GOES-16 y los repositorios de AWS.
-```
+
 

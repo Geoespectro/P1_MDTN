@@ -1,102 +1,144 @@
-# MDTN v0.1 - Proyecto de Descarga y Procesamiento de Datos Satelitales GOES-16
+Aquí tienes el `README.md` actualizado y completo, asegurándome de incluir toda la información correctamente organizada, sin los archivos generados por ejecución:
 
-## Descripción General
+```markdown
+# 🌐 MDTN v0.1 - Proyecto de Descarga y Procesamiento de Datos Satelitales GOES-16
 
-**MDTN v0.1** es un proyecto diseñado para automatizar la descarga y el procesamiento de datos satelitales del satélite **GOES-16**. El sistema descarga imágenes del satélite en tiempo real desde el servidor de NOAA y procesa los datos para generar visualizaciones que permitan un análisis meteorológico y geográfico. Este proyecto está orientado a usuarios y desarrolladores que trabajen en el análisis de datos climáticos, teledetección y estudios meteorológicos.
+**MDTN v0.1** es un sistema diseñado para automatizar la descarga y el procesamiento de datos satelitales **GOES-16**, facilitando la generación de mapas de topes nubosos. Ideal para usuarios y desarrolladores enfocados en análisis climático, teledetección y meteorología.
 
-El proyecto está dividido en dos módulos principales:
-1. **Descarga de Datos**: Un módulo para descargar las imágenes satelitales desde el repositorio S3 de NOAA utilizando `goes16Download.py`.
-2. **Procesamiento de Datos**: Un módulo para procesar las imágenes descargadas, aplicar calibraciones y generar productos visuales utilizando `main.py`.
+---
 
-## Estructura del Proyecto
+## 📖 Descripción General
 
-El proyecto está organizado de la siguiente manera:
+El proyecto consta de dos módulos principales:
+1. **📥 Descarga de Datos**: Utiliza `goes16Download.py` para descargar imágenes desde el servidor S3 de NOAA.
+2. **⚙️ Procesamiento de Datos**: Procesa las imágenes descargadas, aplicando calibraciones y generando productos visuales con `main.py`.
 
-```
+---
+
+## 📂 Estructura del Proyecto
+
+```plaintext
 .
 ├── descarga
-│   ├── goes16Download.py       # Script principal para la descarga de imágenes GOES-16
+│   ├── goes16Download.py       # Script principal para descargar imágenes GOES-16
 │   ├── helpers.py              # Funciones auxiliares para la descarga
-│   ├── setup.json              # Archivo de configuración de la descarga
-│   └── doc.md                  # Documentación del módulo de descarga
+│   └── setup.json              # Configuración de la descarga
+├── docs
+│   ├── descarga_doc.md         # Documentación del módulo de descarga
+│   ├── docs_test               # Documentación de pruebas unitarias
+│   │   ├── test_descarga.md    # Pruebas del módulo de descarga
+│   │   └── test_procesador.md  # Pruebas del módulo de procesamiento
+│   ├── procesador_doc.md       # Documentación del módulo de procesamiento
+│   └── run_all_doc.md          # Documentación del script lanzador
 ├── Procesador
-│   ├── data                    # Datos auxiliares para el procesamiento (configuración, shapefiles, etc.)
-│   ├── inbox                   # Directorio de entrada donde se almacenan las imágenes descargadas
-│   ├── main.py                 # Script principal para procesar las imágenes
-│   ├── src                     # Código fuente auxiliar para el procesamiento
-│   ├── workdir                 # Directorio de trabajo donde se almacenan los resultados del procesamiento
-│   └── doc.md                  # Documentación del módulo de procesamiento
-├── run_all.py                  # Script lanzador que ejecuta los módulos de descarga y procesamiento concurrentemente
-├── doc.md                      # Documentación general del proyecto
-└── README.md                   # Este archivo, que proporciona una descripción general del proyecto
+│   ├── data                    # Configuraciones y datos auxiliares (shapefiles, etc.)
+│   │   ├── conf                # Configuración de parámetros del procesamiento
+│   │   │   └── SMN_dict.conf   # Archivo de configuración principal
+│   │   ├── grids               # Archivos de coordenadas
+│   │   │   ├── g16_lats_8km.txt
+│   │   │   └── g16_lons_8km.txt
+│   │   ├── logo                # Recursos gráficos
+│   │   │   └── logo.png
+│   │   └── shp                 # Shapefiles para la generación de mapas
+│   │       ├── limite_internacional2
+│   │       ├── limite_interprovincial2
+│   │       └── shapefiles
+│   │           └── natural_earth/physical
+│   ├── inbox                   # Directorio de entrada para las imágenes descargadas
+│   ├── main.py                 # Script principal para el procesamiento
+│   ├── src                     # Código auxiliar para el procesamiento
+│   │   └── helpers.py          # Funciones auxiliares del módulo de procesamiento
+│   └── workdir                 # Resultados del procesamiento
+├── test
+│   ├── test_descarga.py        # Pruebas unitarias del módulo de descarga
+│   └── test_procesador.py      # Pruebas unitarias del módulo de procesamiento
+├── Readme.md                   # Este archivo
+├── requirements.txt            # Dependencias del proyecto
+├── run_all.py                  # Script lanzador para ejecutar descarga y procesamiento
+└── run_all_tk.py               # Versión alternativa con interfaz gráfica
 ```
 
-## Requisitos del Proyecto
+---
 
-Para ejecutar **MDTN v0.1**, necesitarás instalar los siguientes requisitos:
+## 🛠️ Requisitos del Proyecto
+
+### Requisitos del Sistema:
 - **Python 3.8+**
-- Bibliotecas de Python:
-  - `boto3`
-  - `s3fs`
-  - `numpy`
-  - `netCDF4`
-  - `matplotlib`
-  - `cartopy`
-  - `watchdog`
-  - `imageio`
-  - `concurrent.futures`
 
-Puedes instalar las dependencias con el siguiente comando:
-```
+### Bibliotecas de Python necesarias:
+- `boto3`, `s3fs`, `numpy`, `netCDF4`, `matplotlib`, `cartopy`, `watchdog`, `imageio`, `concurrent.futures`
+
+Instala las dependencias ejecutando:
+```bash
 pip install -r requirements.txt
 ```
 
-## Instrucciones de Uso
+---
 
-### 1. Configurar el Proyecto
+## 🚀 Instrucciones de Uso
 
-- Configura las variables en el archivo `setup.json` dentro del directorio `descarga/`. Este archivo define los parámetros para la descarga de imágenes, como la fecha de inicio, las bandas a descargar, y la configuración de las rutas.
-- Verifica la configuración de `SMN_dict.conf` dentro del directorio `Procesador/data/conf/` para ajustar los parámetros de visualización y geográficos.
+### 1️⃣ Configuración Inicial
+- Edita `descarga/setup.json` para establecer parámetros como:
+  - Fecha de inicio
+  - Bandas a descargar
+  - Rutas de almacenamiento
+- Ajusta la configuración de visualización y parámetros geográficos en `Procesador/data/conf/SMN_dict.conf`.
 
-### 2. Ejecutar el Proyecto
+### 2️⃣ Ejecución del Proyecto
+Ejecuta el script principal:
+```bash
+python run_all.py
+```
+Esto iniciará simultáneamente los módulos de descarga y procesamiento, permitiendo una operación continua.
 
-- Para iniciar la descarga y el procesamiento de los datos de manera concurrente, ejecuta el script `run_all.py`:
-  ```
-  python run_all.py
-  ```
-- El script `run_all.py` lanzará simultáneamente los procesos de descarga y procesamiento. La descarga de datos se ejecutará continuamente y el procesamiento se realizará en intervalos regulares.
+Si prefieres una interfaz gráfica, utiliza:
+```bash
+python run_all_tk.py
+```
 
-## Documentación de los Módulos
+---
 
-Cada módulo del proyecto cuenta con su propia documentación detallada, que puedes encontrar en:
-- **Descarga de Datos**: `descarga/doc.md`
-- **Procesador de Datos**: `Procesador/doc.md`
-- **Script Lanzador**: La documentación del script `run_all.py` está incluida en el archivo `doc.md` en la raíz del proyecto.
+## 📚 Documentación
 
-## Mejoras y Futuras Actualizaciones
+Consulta la documentación específica de cada módulo y pruebas en la carpeta `docs`:
+- **Descarga**: [`docs/descarga_doc.md`](docs/descarga_doc.md)
+- **Procesamiento**: [`docs/procesador_doc.md`](docs/procesador_doc.md)
+- **Pruebas**: [`docs/docs_test/`](docs/docs_test/)
+- **Script Lanzador**: [`docs/run_all_doc.md`](docs/run_all_doc.md)
 
-Este proyecto es la versión 0.1 y, por lo tanto, está sujeto a futuras mejoras. Algunas posibles áreas de desarrollo incluyen:
-- **Optimización de la Descarga**: Mejorar la lógica de reintento y la capacidad de reanudar descargas de manera más eficiente.
-- **Monitoreo Mejorado**: Agregar un sistema de notificaciones que informe al usuario cuando ocurre un error o cuando se completa una tarea.
-- **Visualización**: Incorporar paneles de control para una visualización interactiva de los datos procesados.
+---
 
-## Contribuir al Proyecto
+## ✨ Mejoras Futuras
 
-Si deseas contribuir al desarrollo del proyecto, por favor, sigue estos pasos:
+Algunas posibles mejoras incluyen:
+- **⚡ Optimización**: Mejorar la lógica de reintentos y descargas interrumpidas.
+- **📢 Notificaciones**: Implementar alertas en caso de errores o finalización de tareas.
+- **📊 Visualización**: Añadir dashboards interactivos para explorar los resultados.
+
+---
+
+## 👫 Contribuir
+
+¡Colabora con este proyecto! Sigue estos pasos:
 1. Haz un fork del repositorio.
-2. Crea una rama para tu funcionalidad (`git checkout -b feature/nueva-funcionalidad`).
-3. Realiza los cambios necesarios y haz commit (`git commit -m 'Añadir nueva funcionalidad'`).
-4. Envía tus cambios (`git push origin feature/nueva-funcionalidad`).
+2. Crea una rama (`git checkout -b feature/nueva-funcionalidad`).
+3. Realiza los cambios y haz commit (`git commit -m 'Descripción del cambio'`).
+4. Envía los cambios (`git push origin feature/nueva-funcionalidad`).
 5. Abre un Pull Request.
 
-## Licencia
+---
+
+## 📝 Licencia
 
 Este proyecto está abierto a la colaboración.
 
-## Contacto
+---
 
-Para más información, preguntas o sugerencias, no dudes en contactarnos:
-- **Compiladores**: Juan Carlos Quinteros, Pedro Rivolta
+## 📩 Contacto
 
-¡Gracias por utilizar **MDTN v0.1** creditos para Goes-16 y los repsoitorios de AWS!
+Para dudas o sugerencias:
+- **Juan Carlos Quinteros**, **Pedro Rivolta**
+
+¡Gracias por utilizar **MDTN v0.1**! Créditos a GOES-16 y los repositorios de AWS.
+```
 

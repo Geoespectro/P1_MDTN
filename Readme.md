@@ -1,18 +1,22 @@
-# 🌐 MDTN v0.1 - Proyecto de Descarga y Procesamiento de Datos Satelitales GOES-16
-
-**MDTN v0.1** es un sistema diseñado para automatizar la descarga y el procesamiento de datos satelitales **GOES-16**, facilitando la generación de mapas de topes nubosos. Ideal para usuarios y desarrolladores enfocados en análisis climático, teledetección y meteorología.
+### **Revisión y Mejora del Archivo Readme.md**
 
 ---
 
-## 📖 Descripción General
+# 🌐 **MDTN v0.1 - Proyecto de Descarga y Procesamiento de Datos Satelitales GOES-16**
+
+**MDTN v0.1** es un sistema diseñado para automatizar la descarga y el procesamiento de datos satelitales **GOES-16**, facilitando la generación de mapas de topes nubosos. Es ideal para usuarios y desarrolladores enfocados en análisis climático, teledetección y meteorología.
+
+---
+
+## 📖 **Descripción General**
 
 El proyecto consta de dos módulos principales:
-1. **📥 Descarga de Datos**: Utiliza `goes16Download.py` para descargar imágenes desde el servidor S3 de NOAA.
+1. **📥 Descarga de Datos**: Utiliza `goes16Download.py` para descargar imágenes desde el bucket S3 de NOAA.
 2. **⚙️ Procesamiento de Datos**: Procesa las imágenes descargadas, aplicando calibraciones y generando productos visuales con `main.py`.
 
 ---
 
-## 📂 Estructura del Proyecto
+## 📂 **Estructura del Proyecto**
 
 ```plaintext
 .
@@ -57,12 +61,12 @@ El proyecto consta de dos módulos principales:
 
 ---
 
-## 🛠️ Requisitos del Proyecto
+## 🛠️ **Requisitos del Proyecto**
 
-### Requisitos del Sistema:
+### **Requisitos del Sistema**:
 - **Python 3.8+**
 
-### Bibliotecas de Python necesarias:
+### **Bibliotecas de Python necesarias**:
 - `boto3`, `s3fs`, `numpy`, `netCDF4`, `matplotlib`, `cartopy`, `watchdog`, `imageio`, `concurrent.futures`
 
 Instala las dependencias ejecutando:
@@ -70,18 +74,20 @@ Instala las dependencias ejecutando:
 pip install -r requirements.txt
 ```
 
+*Nota*: Es recomendable trabajar en un entorno virtual para mantener organizadas las dependencias del proyecto.
+
 ---
 
-## 🚀 Instrucciones de Uso
+## 🚀 **Instrucciones de Uso**
 
-### 1️⃣ Configuración Inicial
+### **1️⃣ Configuración Inicial**
 - Edita `descarga/setup.json` para establecer parámetros como:
-  - Fecha de inicio
-  - Bandas a descargar
-  - Rutas de almacenamiento
+  - Fecha de inicio y fin.
+  - Bandas a descargar.
+  - Rutas de almacenamiento.
 - Ajusta la configuración de visualización y parámetros geográficos en `Procesador/data/conf/SMN_dict.conf`.
 
-### 2️⃣ Ejecución del Proyecto
+### **2️⃣ Ejecución del Proyecto**
 Ejecuta el script principal:
 ```bash
 python run_all.py
@@ -95,26 +101,26 @@ python run_all_tk.py
 
 ---
 
-## 📚 Documentación
+## 📚 **Documentación**
 
 Consulta la documentación específica de cada módulo y pruebas en la carpeta `docs`:
-- **Descarga**: [`docs/descarga_doc.md`](docs/descarga_doc.md)
-- **Procesamiento**: [`docs/procesador_doc.md`](docs/procesador_doc.md)
-- **Pruebas**: [`docs/docs_test/`](docs/docs_test/)
-- **Script Lanzador**: [`docs/run_all_doc.md`](docs/run_all_doc.md)
+- **Descarga**: [`docs/descarga_doc.md`](docs/descarga_doc.md) - Explica la lógica de descarga y cómo se ejecuta.
+- **Procesamiento**: [`docs/procesador_doc.md`](docs/procesador_doc.md) - Describe el módulo de procesamiento.
+- **Pruebas Unitarias**: [`docs/docs_test/`](docs/docs_test/) - Documentación detallada sobre las pruebas para descarga y procesamiento.
+- **Script Lanzador**: [`docs/run_all_doc.md`](docs/run_all_doc.md) - Explicación del script lanzador que conecta descarga y procesamiento.
 
 ---
 
-## ✨ Mejoras Futuras
+## ✨ **Mejoras Futuras**
 
 Algunas posibles mejoras incluyen:
-- **⚡ Optimización**: Mejorar la lógica de reintentos y descargas interrumpidas.
-- **📢 Notificaciones**: Implementar alertas en caso de errores o finalización de tareas.
-- **📊 Visualización**: Añadir dashboards interactivos para explorar los resultados.
+- **⚡ Optimización**: Mejorar la lógica de reintentos y el manejo de descargas interrumpidas para garantizar una mayor eficiencia.
+- **📢 Notificaciones**: Implementar notificaciones (por ejemplo, por correo electrónico o mensajería instantánea) para alertar sobre errores o finalización de tareas.
+- **📊 Visualización**: Añadir dashboards interactivos para explorar los resultados del análisis y procesamiento de imágenes de manera dinámica.
 
 ---
 
-## 👫 Contribuir
+## 👫 **Contribuir**
 
 ¡Colabora con este proyecto! Sigue estos pasos:
 1. Haz un fork del repositorio.
@@ -125,17 +131,21 @@ Algunas posibles mejoras incluyen:
 
 ---
 
-## 📝 Licencia
+## 📝 **Licencia**
 
-Este proyecto está abierto a la colaboración.
+Este proyecto está abierto a la colaboración y se comparte bajo una licencia abierta.
 
 ---
 
-## 📩 Contacto
+## 📩 **Contacto**
 
 Para dudas o sugerencias:
 - **Juan Carlos Quinteros**, **Pedro Rivolta**
 
 ¡Gracias por utilizar **MDTN v0.1**! Créditos a GOES-16 y los repositorios de AWS.
+
+---
+
+
 
 

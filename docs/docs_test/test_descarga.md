@@ -1,4 +1,6 @@
-## **Documentación del Test de Conexión al Repositorio S3**
+### **Documentación del Test de Conexión al Repositorio S3**
+
+---
 
 ### **Descripción General**
 
@@ -17,10 +19,17 @@ El objetivo principal del test es garantizar:
 ### **Configuración**
 
 #### **Entorno Requerido**
-- **Lenguaje:** Python 3.7+
+- **Lenguaje:** Python 3.8+
 - **Librerías Necesarias:**
   - `unittest`: Para estructurar las pruebas.
   - `s3fs`: Para conectarse al bucket S3 de forma anónima.
+
+#### **Instalación**
+Para ejecutar este test, asegúrate de tener las siguientes dependencias instaladas:
+
+```bash
+pip install s3fs
+```
 
 #### **Estructura de Archivos**
 El archivo `test_descarga.py` debe estar ubicado en la carpeta `test` dentro del proyecto. La estructura esperada del proyecto es la siguiente:
@@ -36,7 +45,7 @@ P1_MDTN/
 
 #### **Variables Configuradas en el Test**
 - **`s3_bucket`:** Dirección del bucket S3 (`s3://noaa-goes16/`).
-- **`temp_path` y `final_path`:** Carpetas temporales definidas, pero no utilizadas en este test.
+- **`temp_path` y `final_path`:** Carpetas temporales definidas y utilizadas para preparar y limpiar el entorno de prueba.
 
 ---
 
@@ -56,11 +65,11 @@ P1_MDTN/
 
 #### **Métodos Utilizados**
 - **`setUpClass`**:
-  Configura las variables iniciales y prepara el entorno necesario para la prueba.
+  Configura las variables iniciales y prepara el entorno necesario para la prueba, incluyendo la creación de carpetas temporales.
 - **`tearDownClass`**:
-  Limpia las carpetas temporales creadas durante la ejecución del test.
+  Limpia las carpetas temporales y archivos creados durante la ejecución del test para mantener el entorno limpio.
 - **`test_connection_s3`**:
-  Implementa la lógica principal para verificar la conectividad con el bucket.
+  Implementa la lógica principal para verificar la conectividad con el bucket S3.
 
 ---
 
@@ -70,6 +79,7 @@ P1_MDTN/
 ```bash
 python test/test_descarga.py
 ```
+*Nota: Asegúrate de activar el entorno virtual si estás trabajando en uno.*
 
 #### **Salida Esperada**
 Si la conexión es exitosa:
@@ -116,7 +126,7 @@ Este test es útil para:
 
 ### **Conclusión**
 
-El archivo `test_descarga.py` es un test simple pero esencial para garantizar que el proyecto pueda conectarse correctamente al bucket S3. Este test minimiza el riesgo de interrupciones relacionadas con problemas de conectividad y asegura que el entorno esté configurado correctamente.
+El archivo `test_descarga.py` es un test simple pero esencial para garantizar que el proyecto pueda conectarse correctamente al bucket S3. Este test minimiza el riesgo de interrupciones relacionadas con problemas de conectividad y asegura que el entorno esté configurado correctamente antes de ejecutar otros procesos dependientes de los datos almacenados en S3.
 
---- 
+---
 

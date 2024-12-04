@@ -33,11 +33,26 @@ setup_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'descarga/
 
 # Funciones para actualizar el estado en la interfaz
 def actualizar_estado(texto):
+    """
+    Actualiza la etiqueta de estado en la interfaz gráfica y también imprime el estado en la consola.
+
+    Args:
+        texto (str): El estado actual a mostrar en la interfaz y la consola.
+    """
     etiqueta_estado.config(text=f"Estado: {texto}")
     print(texto)  # Impresión en consola para seguimiento
 
 # Función para actualizar el archivo setup.json con las fechas y horas especificadas
 def actualizar_setup_json(start_date, start_time, end_date, end_time):
+    """
+    Actualiza el archivo de configuración 'setup.json' con las fechas y horas especificadas por el usuario.
+
+    Args:
+        start_date (str): Fecha de inicio en formato 'YYYY-MM-DD'.
+        start_time (str): Hora de inicio en formato 'HH:MM'.
+        end_date (str): Fecha de fin en formato 'YYYY-MM-DD'.
+        end_time (str): Hora de fin en formato 'HH:MM'.
+    """
     with open(setup_path, 'r') as f:
         setup_data = json.load(f)
 
@@ -51,6 +66,10 @@ def actualizar_setup_json(start_date, start_time, end_date, end_time):
 
 # Función para ejecutar el script de descarga
 def ejecutar_descarga():
+    """
+    Ejecuta el script de descarga 'goes16Download.py' y actualiza el estado en la interfaz.
+    Si ocurre un error, se muestra un mensaje de error en la interfaz gráfica.
+    """
     try:
         actualizar_estado("Descarga en ejecución")
         procesos_activos["descarga"] = subprocess.Popen(['python', 'descarga/goes16Download.py'])
@@ -62,6 +81,10 @@ def ejecutar_descarga():
 
 # Función para ejecutar el script de procesamiento
 def ejecutar_procesamiento():
+    """
+    Ejecuta el script de procesamiento 'main.py' y actualiza el estado en la interfaz.
+    Si ocurre un error, se muestra un mensaje de error en la interfaz gráfica.
+    """
     try:
         actualizar_estado("Procesamiento en ejecución")
         procesos_activos["procesamiento"] = subprocess.Popen(['python', 'Procesador/main.py'])
@@ -73,6 +96,10 @@ def ejecutar_procesamiento():
 
 # Función para iniciar la descarga y el procesamiento
 def iniciar_procesos():
+    """
+    Inicia los procesos de descarga y procesamiento en hilos separados.
+    Valida las fechas y horas ingresadas por el usuario antes de iniciar los procesos.
+    """
     start_date = entry_start_date.get()
     start_time = entry_start_time.get()
     end_date = entry_end_date.get()
@@ -106,6 +133,9 @@ def iniciar_procesos():
 
 # Función para pausar la descarga (sin pausar el procesamiento)
 def pausar_descarga():
+    """
+    Pausa el proceso de descarga si está en ejecución, dejando el proceso de procesamiento activo.
+    """
     if procesos_activos["descarga"] and procesos_activos["descarga"].poll() is None:
         # Pausar implica detener el proceso de descarga
         procesos_activos["descarga"].terminate()
@@ -116,6 +146,9 @@ def pausar_descarga():
 
 # Función para reanudar la descarga
 def reanudar_descarga():
+    """
+    Reanuda el proceso de descarga que fue previamente pausado y actualiza el estado en la interfaz.
+    """
     # Iniciar el proceso de descarga nuevamente
     threading.Thread(target=ejecutar_descarga, daemon=True).start()
     actualizar_estado("Reanudando descarga, procesamiento en ejecución")
@@ -123,6 +156,9 @@ def reanudar_descarga():
 
 # Función para finalizar los procesos
 def finalizar_procesos():
+    """
+    Finaliza ambos procesos (descarga y procesamiento) si están en ejecución y actualiza la interfaz.
+    """
     if procesos_activos["descarga"]:
         procesos_activos["descarga"].terminate()
         procesos_activos["descarga"] = None

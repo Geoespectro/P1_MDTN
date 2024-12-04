@@ -10,7 +10,6 @@ import logging
 import glob
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-import imageio
 from PIL import Image
 
 matplotlib.use('Agg')
@@ -24,7 +23,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 json_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/conf/SMN_dict.conf")
 confData = goeshelp.LoadDictionary(json_file_path)
 workdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), confData['workdir'])
-cptdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), confData['cptdir'])
 inboxdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), confData['inbox'])
 gif_path = os.path.join(workdir, 'conae.gif')
 
@@ -41,8 +39,12 @@ def actualizar_gif(imagenes, gif_path):
     """
     Actualiza el GIF con una lista de imágenes y una duración específica entre cuadros usando Pillow.
 
-    :param imagenes: Lista de rutas a las imágenes.
-    :param gif_path: Ruta del archivo GIF de salida.
+    Args:
+        imagenes (list): Lista de rutas a las imágenes.
+        gif_path (str): Ruta del archivo GIF de salida.
+
+    Returns:
+        None
     """
     # Leer la duración desde el archivo de configuración
     frame_duration = confData.get('gif_frame_duration', 1.0)  # Valor predeterminado: 1 segundo
@@ -72,7 +74,11 @@ def procesar_archivo(image_path):
     """
     Procesa un archivo NetCDF para generar imágenes y actualiza el GIF.
 
-    :param image_path: Ruta del archivo NetCDF.
+    Args:
+        image_path (str): Ruta del archivo NetCDF.
+
+    Returns:
+        None
     """
     try:
         logging.info(f'Procesando archivo {image_path}')
@@ -86,8 +92,6 @@ def procesar_archivo(image_path):
     YY, MM, DD = netCDFread.__dict__['time_coverage_start'].split('T')[0].split('-')
     HH, mm, s_ms = netCDFread.__dict__['time_coverage_start'].split('T')[1].split('Z')[0].split(':')
     ss, mls = s_ms.split('.')
-
-    Tinicio = f'{YY}{MM}{DD}_{HH}{mm}{ss}'
 
     metaCDF = netCDFread.variables
 
@@ -134,7 +138,7 @@ def procesar_archivo(image_path):
                                                 img_indexes[0]:img_indexes[1]][::1,::1]
 
     # Calibración de los datos
-    image_cal, Unit = goeshelp.GetCalibratedImage(netCDFread, imagedata)
+    image_cal, _ = goeshelp.GetCalibratedImage(netCDFread, imagedata)
     del imagedata
 
     # Define los umbrales de temperatura
@@ -205,7 +209,6 @@ class MyHandler(FileSystemEventHandler):
         if event.src_path.endswith('.nc'):
             procesar_archivo(event.src_path)
 
-
 if __name__ == "__main__":
     event_handler = MyHandler()
     observer = Observer()
@@ -219,5 +222,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
+
 
 

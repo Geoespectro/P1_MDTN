@@ -1,9 +1,7 @@
 import numpy as np
 import colorsys
 import json
-import time as t
-from datetime import datetime
-import sys, os
+import os
 from netCDF4 import Dataset
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
@@ -14,70 +12,19 @@ import cartopy
 
 Image.MAX_IMAGE_PIXELS = 1000000000
 
-def loadCPT(path):
-    """
-    Carga un archivo CPT y lo convierte en un diccionario de colores.
-
-    :param path: Ruta del archivo CPT.
-    :return: Diccionario de colores.
-    """
-    try:
-        f = open(path)
-    except FileNotFoundError:
-        print(f"Archivo {path} no encontrado")
-        return None
-    
-    lines = f.readlines()
-    f.close()
-
-    x, r, g, b = [], [], [], []
-    colorModel = 'RGB'
-
-    for l in lines:
-        ls = l.split()
-        if l[0] == '#':
-            if ls[-1] == 'HSV':
-                colorModel = 'HSV'
-            continue
-        if ls[0] in ['B', 'F', 'N']:
-            continue
-        else:
-            x.append(float(ls[0]))
-            r.append(float(ls[1]))
-            g.append(float(ls[2]))
-            b.append(float(ls[3]))
-            xtemp, rtemp, gtemp, btemp = float(ls[4]), float(ls[5]), float(ls[6]), float(ls[7])
-            x.append(xtemp)
-            r.append(rtemp)
-            g.append(gtemp)
-            b.append(btemp)
-
-    if colorModel == 'HSV':
-        for i in range(len(r)):
-            rr, gg, bb = colorsys.hsv_to_rgb(r[i] / 360., g[i], b[i])
-            r[i], g[i], b[i] = rr, gg, bb
-    elif colorModel == 'RGB':
-        r, g, b = [val / 255.0 for val in r], [val / 255.0 for val in g], [val / 255.0 for val in b]
-
-    xNorm = [(val - x[0]) / (x[-1] - x[0]) for val in x]
-
-    red = [[xNorm[i], r[i], r[i]] for i in range(len(x))]
-    green = [[xNorm[i], g[i], g[i]] for i in range(len(x))]
-    blue = [[xNorm[i], b[i], b[i]] for i in range(len(x))]
-
-    colorDict = {'red': red, 'green': green, 'blue': blue}
-    return colorDict
-
 def GetCroppedImage(netCDFread, min_lon, max_lon, min_lat, max_lat):
     """
     Obtiene una imagen recortada de los datos NetCDF en las coordenadas especificadas.
 
-    :param netCDFread: Objeto NetCDF leído.
-    :param min_lon: Longitud mínima.
-    :param max_lon: Longitud máxima.
-    :param min_lat: Latitud mínima.
-    :param max_lat: Latitud máxima.
-    :return: Extensión de la imagen y los índices de las coordenadas recortadas.
+    Args:
+        netCDFread (Dataset): Objeto NetCDF leído.
+        min_lon (float): Longitud mínima.
+        max_lon (float): Longitud máxima.
+        min_lat (float): Latitud mínima.
+        max_lat (float): Latitud máxima.
+
+    Returns:
+        tuple: Extensión de la imagen y los índices de las coordenadas recortadas.
     """
     band_resolution_km = float(getattr(netCDFread, 'spatial_resolution').split("km")[0])
     filepath = os.path.abspath(__file__).split('/src')[0] + '/data/grids/'
@@ -111,9 +58,12 @@ def GetPlotObject(confData, extent):
     """
     Crea un objeto de trama configurado con los parámetros especificados.
 
-    :param confData: Diccionario de configuración.
-    :param extent: Extensión de la trama.
-    :return: Objeto de ejes configurado.
+    Args:
+        confData (dict): Diccionario de configuración.
+        extent (list): Extensión de la trama.
+
+    Returns:
+        Axes: Objeto de ejes configurado.
     """
     shapesdir = os.path.dirname(os.path.abspath(__file__)).split('/src')[0] + '/data/shp'
     ax = plt.axes(projection=ccrs.PlateCarree())
@@ -148,8 +98,11 @@ def LoadDictionary(path):
     """
     Carga un diccionario desde un archivo de configuración.
 
-    :param path: Ruta del archivo de configuración.
-    :return: Diccionario cargado.
+    Args:
+        path (str): Ruta del archivo de configuración.
+
+    Returns:
+        dict: Diccionario cargado.
     """
     with open(path, 'r') as f:
         content = f.read()
@@ -157,6 +110,16 @@ def LoadDictionary(path):
     return dic
 
 def GetCalibratedImage(netCDFread, image):
+    """
+    Calibra la imagen utilizando los metadatos disponibles en el archivo NetCDF.
+
+    Args:
+        netCDFread (Dataset): Objeto NetCDF leído.
+        image (ndarray): Datos de la imagen a calibrar.
+
+    Returns:
+        tuple: Imagen calibrada y la unidad de medida correspondiente.
+    """
     metaCDF = netCDFread.variables
     icanal = int(metaCDF['band_id'][:])
     if icanal >= 7:
@@ -174,24 +137,18 @@ def GetCalibratedImage(netCDFread, image):
         unit = 'Reflectancia'
     return image_cal, unit
 
-def GetMonth(month):
-    """
-    Devuelve el nombre del mes en español para un número de mes dado.
-
-    :param month: Número del mes (1-12).
-    :return: Nombre del mes en español.
-    """
-    meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
-    return meses[month - 1]
-
 def AddImageFoot(ax, title, institution=None, size=8.0):
     """
     Añade el pie de imagen con el título y la institución opcional.
 
-    :param ax: Objeto de ejes.
-    :param title: Título de la imagen.
-    :param institution: Nombre de la institución (opcional).
-    :param size: Tamaño del texto.
+    Args:
+        ax (Axes): Objeto de ejes.
+        title (str): Título de la imagen.
+        institution (str, optional): Nombre de la institución.
+        size (float, optional): Tamaño del texto.
+
+    Returns:
+        None
     """
     xlim = ax.get_xlim()
     ylim = ax.get_ylim()
@@ -206,9 +163,12 @@ def AddTemperatureLegend(ax):
     """
     Añade la leyenda de temperatura a la imagen.
 
-    :param ax: Objeto de ejes.
+    Args:
+        ax (Axes): Objeto de ejes.
+
+    Returns:
+        None
     """
-    # Definir los colores y los rangos de temperatura correspondientes
     colors = ['yellow', 'orange', 'red']
     temperature_ranges = [[-53, -63], [-63, -73], [-73, -90]]
 
@@ -216,7 +176,11 @@ def AddLogo(ax):
     """
     Añade el logo de CONAE-Argentina a la imagen.
 
-    :param ax: Objeto de ejes.
+    Args:
+        ax (Axes): Objeto de ejes.
+
+    Returns:
+        None
     """
     logo_path = 'Procesador/data/logo/logo.png'  
     logo_img = plt.imread(logo_path)
@@ -227,6 +191,7 @@ def AddLogo(ax):
     logo_x = xlim[1] - 0.01 * (xlim[1] - xlim[0]) - logo_width
     logo_y = ylim[1] - 0.001 * (ylim[1] - ylim[0]) - logo_height - 0.01 * (ylim[1] - ylim[0])
     ax.imshow(logo_img, extent=(logo_x, logo_x + logo_width, logo_y, logo_y + logo_height), aspect='auto', zorder=10)
+
 
 
 
